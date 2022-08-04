@@ -20,14 +20,19 @@
 }
 
 input {
+    width: 100%;
     height: 45px;
     margin-bottom: 6px;
     border: 1px solid #D5D5D5;
     border-radius: 5px;
     padding: 10px;
-    color: #DBDBDB;
+
     font-family: 'Lexend Deca', sans-serif;
     font-size: 19px;
+}
+
+input::placeholder {
+    color: #D5D5D5
 }
 
 .button-login {
@@ -58,6 +63,7 @@ input {
     text-decoration: underline;
     font-weight: 700;
     cursor: pointer;
+    text-decoration: #52B6FF;
 }
 
 .signup:hover {
