@@ -1,21 +1,22 @@
 import React from "react";
+import Context from '../../Context/Context';
 
 export default function CreateHabit({ saveHabit, toggleCreateHabit }) {
   const daysOfWeek = ["D", "S", "T", "Q", "Q", "S", "S"];
 
-  const [habitName, setHabitName] = React.useState("");
-  const [habitDays, setHabitDays] = React.useState([]);
+  const [habitName, setHabitName] = useContext(Context);
+  const [habitDays, setHabitDays] = useContext(Context);
 
   const buttonsDaysOfWeek = daysOfWeek.map((day, index) => {
-    if (!habitDays.includes(index + 1)) {
+    if (!habitDays.includes(index)) {
       return (
         <div
           onClick={() => {
-            if (!habitDays.includes(index + 1)) {
-              habitDays.push(index + 1);
+            if (!habitDays.includes(index)) {
+              habitDays.push(index);
             } else {
               habitDays.sort();
-              habitDays.splice(habitDays.indexOf(index + 1), 1);
+              habitDays.splice(habitDays.indexOf(index), 1);
             }
             habitDays.sort();
             setHabitDays([...habitDays]);
@@ -28,11 +29,11 @@ export default function CreateHabit({ saveHabit, toggleCreateHabit }) {
     return (
       <div
         onClick={() => {
-          if (!habitDays.includes(index + 1)) {
-            habitDays.push(index + 1);
+          if (!habitDays.includes(index)) {
+            habitDays.push(index);
           } else {
             habitDays.sort();
-            habitDays.splice(habitDays.indexOf(index + 1), 1);
+            habitDays.splice(habitDays.indexOf(index), 1);
           }
           habitDays.sort();
           setHabitDays([...habitDays]);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import TodayHabits from "./components/TodayHabits.js";
+import TodayHabits from "./TodayHabits/TodayHabit";
 
 export default function TodayPage() {
     const [todayHabits, setTodayHabits] = useState(null);
@@ -18,7 +18,7 @@ export default function TodayPage() {
         };
         console.log(token);
 
-        const promise = axios.get(getToday, config);
+        const promise = axios.get(getTodayHabits, config);
         promise
             .then((response) => {
                 const { data } = response;

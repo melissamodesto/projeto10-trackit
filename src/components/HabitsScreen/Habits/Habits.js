@@ -4,10 +4,13 @@ import Habit from "./Habit.js";
 import axios from "axios";
 import CreateHabit from "./CreateHabits";
 import SecondHeader from "../../Header/SecondHeader.js";
+import Context from "../../Context/Context";
 
 export default function Habits() {
   const [habits, setHabits] = useState([]);
   const [toggleCreateHabit, setToggleCreateHabit] = useState(false);
+  const [habitName, setHabitName] = useState("");
+  const [habitDays, setHabitDays] = useState([]);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
@@ -17,6 +20,10 @@ export default function Habits() {
     },
   };
   console.log(token);
+
+  function toggleCreateTaskContainer(value) {
+    setToggleCreateHabit(value);
+  }
 
   useEffect(() => {
     const habitsGet =
@@ -54,14 +61,18 @@ export default function Habits() {
 
   function checkCreateHabitContainer() {
     return toggleCreateHabit ? (
-      <CreateHabit
-        toggleCreateHabit={(value) => {
-          toggleCreateHabit(value);
-        }}
-        saveHabit={(habitData) => {
-          saveHabit(habitData);
-        }}
-      />
+      <Context.Provider
+        value={{ habitName, habitDays, setHabitName, setHabitDays }}
+      >
+        <CreateHabit
+          toggleCreateHabit={(value) => {
+            toggleCreateHabit(value);
+          }}
+          saveHabit={(habitData) => {
+            saveHabit(habitData);
+          }}
+        />
+      </Context.Provider>
     ) : (
       <></>
     );
@@ -95,10 +106,6 @@ export default function Habits() {
       }
     });
     setHabits(newHabits);
-  }
-
-  function toggleCreateTaskContainer(value) {
-    setToggleCreateHabit(value);
   }
 
   const createHabitContent = checkCreateHabitContainer();

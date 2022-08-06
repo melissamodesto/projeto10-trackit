@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function TodayHabit() {
+export default function TodayScreen() {
     return (
-        <S.TodayHabit>
+        <div>
             <div>
                 <h3>Ler 1 capítulo de livro</h3>
                 <p>Sequência atual: 3 dias</p>
@@ -11,6 +11,6 @@ export default function TodayHabit() {
             <button>
                 <ion-icon name="checkmark-outline"></ion-icon>
             </button>
-        </S.TodayHabit>
+        </div>
     );
 }
