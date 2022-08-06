@@ -1,22 +1,28 @@
 import React from "react";
+import axios from "axios";
 
-const daysOfWeek = ["D", "S", "T", "Q", "Q", "S", "S"];
-const buttonsDaysOfWeek = daysOfWeek.map((day) => {
-  return <div key={day}>{day}</div>;
-});
+export default function Habit({ habit: { id, name, days }, removeTask }) {
+  const daysOfWeek = ["D", "S", "T", "Q", "Q", "S", "S"];
 
-export default function Habit(props) {
-  const { id, name, days } = props;
-
+  const buttonsDaysOfWeek = daysOfWeek.map((day, index) => {
+    return days.includes(index) ? (
+      <button key={index} className="day-button-selected">
+        {day}
+      </button>
+    ) : (
+      <button key={index} className="day-button">
+        {day}
+      </button>
+    );
+  });
 
   return (
     <>
       <p>{name}</p>
       <div>{buttonsDaysOfWeek}</div>
-      <div>
-        <img src="../../assets/images/trash.png" alt="Remove task Icon" />
+      <div onClick={() => removeTask(id)}>
+        <img src="../../assets/images/trash.png" alt="Remove Task" />
       </div>
     </>
   );
 }
-
