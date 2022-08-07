@@ -1,14 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState, useContext } from "react";
 import "./styleLoginScreen.css";
 import axios from "axios";
 
 export default function LoginScreen(props) {
-  const {
-    setUserLoginData,
-    userLoginData,
-    userLoginData: { email, password },
-  } = props;
+  const [userLoginData, setUserLoginData] = useState({
+    email: "",
+    password: "",
+  });
+  const { email, password } = userLoginData;
 
   const signInPostForm =
     "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
@@ -21,11 +21,19 @@ export default function LoginScreen(props) {
     let promise = axios.post(signInPostForm, userLoginData);
     promise
       .then((response) => {
-        const { data } = response;
-        console.log(response);
-        console.log(data);
-        localStorage.setItem("token", data.token);
-        navigate("../habits");
+        const {
+          data: { name, id, email, image, token },
+        } = response;
+        localStorage.setItem("token", token);
+        const newUserData = {
+          name,
+          image,
+          id,
+          email,
+          isLoggedIn: true,
+        };
+        localStorage.setItem("userData", JSON.stringify(newUserData));
+        navigate("../hoje");
       })
       .catch((error) => {
         console.log(error);
@@ -66,8 +74,8 @@ export default function LoginScreen(props) {
             autoComplete="on"
           />
           <div className="button-login">
-            <Link to="/habitos"> Entrar </Link>
-            </div>
+            <div> Entrar </div>
+          </div>
         </form>
         <div className="signup">
           <Link to="/cadastro">Não tem uma conta? Cadastre-se</Link>

@@ -1,10 +1,52 @@
 import React from "react";
 
-export default function TopMessage() {
+export default function TopMessageToday({ todayHabits }) {
+    function getDayOfWeek() {
+        const dayNumber = dayjs().day();
+        switch (dayNumber) {
+            case 0:
+                return "Domingo";
+            case 1:
+                return "Segunda-Feira";
+            case 2:
+                return "Terça-Feira";
+            case 3:
+                return "Quarta-Feira";
+            case 4:
+                return "Quinta-Feira";
+            case 5:
+                return "Sexta-Feira";
+            default:
+                return "Sábado";
+        }
+    }
+
+    function getMonthNumber() {
+        return (dayjs().month() + 1).toString().padStart(2, "0");
+    }
+
+    function getPercentageDone() {
+        const countHabitsDone = todayHabits.filter(
+            (todayHabit) => todayHabit.done
+        ).length;
+        const countTotalHabits = todayHabits.length;
+
+        return countHabitsDone > 0 ? (
+            <div>
+                {((countHabitsDone / countTotalHabits) * 100).toFixed(2)} %
+                dos hábitos concluídos
+            </div>
+        ) : (
+            <p>Nenhum hábito concluído ainda</p>
+        );
+    }
+
     return (
         <div>
-            <h2>Segunda, 17/05</h2>
-            <p>Nenhum hábito concluído ainda</p>
+            <h2>
+                {getDayOfWeek()}, {dayjs().date()}/{getMonthNumber()}
+            </h2>
+            {getPercentageDone()}
         </div>
     );
 }

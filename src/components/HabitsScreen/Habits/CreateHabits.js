@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import Context from '../../Context/Context';
+
 
 export default function CreateHabit({ saveHabit, toggleCreateHabit }) {
   const daysOfWeek = ["D", "S", "T", "Q", "Q", "S", "S"];
@@ -48,6 +49,7 @@ export default function CreateHabit({ saveHabit, toggleCreateHabit }) {
     saveHabit({ name: habitName, days: habitDays });
     setHabitName("");
     setHabitDays([]);
+    toggleCreateHabit(false);
   }
 
   return (

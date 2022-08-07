@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-export default function Habit({ habit: { id, name, days }, removeTask }) {
+export default function Habit({ habit: { id, name, days }, removeHabit }) {
   const daysOfWeek = ["D", "S", "T", "Q", "Q", "S", "S"];
 
   const buttonsDaysOfWeek = daysOfWeek.map((day, index) => {
@@ -20,8 +20,8 @@ export default function Habit({ habit: { id, name, days }, removeTask }) {
     <>
       <p>{name}</p>
       <div>{buttonsDaysOfWeek}</div>
-      <div onClick={() => removeTask(id)}>
-        <img src="../../assets/images/trash.png" alt="Remove Task" />
+      <div onClick={() => removeHabit(id)}>
+        <img src="../../assets/images/trash.png" alt="Remove Habit" />
       </div>
     </>
   );

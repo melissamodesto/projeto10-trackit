@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Habit from "./Habit.js";
 import axios from "axios";
-import CreateHabit from "./CreateHabits";
+import CreateHabits from "./CreateHabits";
 import SecondHeader from "../../Header/SecondHeader.js";
 import Context from "../../Context/Context";
 
@@ -21,7 +21,7 @@ export default function Habits() {
   };
   console.log(token);
 
-  function toggleCreateTaskContainer(value) {
+  function toggleCreateHabitContainer(value) {
     setToggleCreateHabit(value);
   }
 
@@ -48,8 +48,8 @@ export default function Habits() {
         return (
           <Habit
             habit={habit}
-            removeTask={(habitId) => {
-              removeTask(habitId);
+            removeHabit={(habitId) => {
+              removeHabit(habitId);
             }}
           />
         );
@@ -61,10 +61,10 @@ export default function Habits() {
 
   function checkCreateHabitContainer() {
     return toggleCreateHabit ? (
-      <Context.Provider
+      <div
         value={{ habitName, habitDays, setHabitName, setHabitDays }}
       >
-        <CreateHabit
+        <div
           toggleCreateHabit={(value) => {
             toggleCreateHabit(value);
           }}
@@ -72,16 +72,16 @@ export default function Habits() {
             saveHabit(habitData);
           }}
         />
-      </Context.Provider>
+      </div>
     ) : (
       <></>
     );
   }
 
   function saveHabit(habitData) {
-    const CREATE_HABIT_URL =
+    const createHabitContent =
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
-    const promise = axios.post(CREATE_HABIT_URL, habitData, config);
+    const promise = axios.post(createHabitContent, habitData, config);
     promise
       .then((response) => {
         const { data } = response;
@@ -94,7 +94,7 @@ export default function Habits() {
     setHabits([...habits, habitData]);
   }
 
-  function removeTask(habitId) {
+  function removeHabit(habitId) {
     const deleteHabit = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitId}`;
     axios.delete(deleteHabit, config);
     console.log("Oiiiiiii");
@@ -115,8 +115,8 @@ export default function Habits() {
     <>
       <div>
         <SecondHeader
-          toggleCreateTaskContainer={(value) => {
-            toggleCreateTaskContainer(value);
+          toggleCreateHabitContainer={(value) => {
+            toggleCreateHabitContainer(value);
           }}
         />
         <div>

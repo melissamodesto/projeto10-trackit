@@ -1,16 +1,39 @@
 import React from "react";
 
-export default function TodayScreen() {
-    return (
-        <div>
-            <div>
-                <h3>Ler 1 capítulo de livro</h3>
-                <p>Sequência atual: 3 dias</p>
-                <p>Seu recorde: 5 dias</p>
-            </div>
-            <button>
-                <ion-icon name="checkmark-outline"></ion-icon>
-            </button>
-        </div>
+export default function TodayHabit({
+  todayHabit: { id, name, done, currentSequence, highestSequence },
+  setHabitAsDone,
+}) {
+  const highestSequenceEl =
+    currentSequence === highestSequence ? (
+      <span>{highestSequence} dias</span>
+    ) : (
+      `${highestSequence} dias`
     );
+
+  return done ? (
+    <div>
+      <div>
+        <h3>{name}</h3>
+        <p>Sequência atual: {currentSequence} dias</p>
+        <p>
+          Seu recorde: {highestSequenceEl} dias
+        </p>
+      </div>
+      <button onClick={() => setHabitAsDone(id)}>
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </button>
+    </div>
+  ) : (
+    <div>
+      <div>
+        <h3>{name}</h3>
+        <p>Sequência atual: {currentSequence} dias</p>
+        <p>Seu recorde: {highestSequenceEl} dias</p>
+      </div>
+      <button onClick={() => setHabitAsDone(id)}>
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </button>
+    </div>
+  );
 }
