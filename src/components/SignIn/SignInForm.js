@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import "./styleLoginScreen.css";
 import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
 
-export default function LoginScreen(props) {
+export default function LoginScreen({ pageLoaded, setPageLoaded }) {
   const [userLoginData, setUserLoginData] = useState({
     email: "",
     password: "",
@@ -14,6 +15,18 @@ export default function LoginScreen(props) {
     "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
 
   const navigate = useNavigate();
+
+  function fillButton() {
+    return !pageLoaded ? (
+      <ThreeDots color="#fff" height={40} width={40} />
+    ) : (
+      "Entrar"
+    );
+  }
+
+  function disableWhileLoading() {
+    return !pageLoaded ? "disabled" : "";
+  }
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -36,7 +49,8 @@ export default function LoginScreen(props) {
         navigate("../hoje");
       })
       .catch((error) => {
-        console.log(error);
+        alert("Usuário e/ou senha inválido(s)");
+        setPageLoaded(true);
       });
   }
 
@@ -60,6 +74,8 @@ export default function LoginScreen(props) {
             }
             placeholder="email"
             autoComplete="on"
+            required
+            disabled={disableWhileLoading()}
           />
           <input
             type="password"
@@ -72,10 +88,10 @@ export default function LoginScreen(props) {
             }
             placeholder="senha"
             autoComplete="on"
+            required
+            disabled={disableWhileLoading()}
           />
-          <div className="button-login">
-            <div> Entrar </div>
-          </div>
+          <button className="button-login">{fillButton()}</button>
         </form>
         <div className="signup">
           <Link to="/cadastro">Não tem uma conta? Cadastre-se</Link>

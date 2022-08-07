@@ -11,6 +11,7 @@ export default function Habits() {
   const [toggleCreateHabit, setToggleCreateHabit] = useState(false);
   const [habitName, setHabitName] = useState("");
   const [habitDays, setHabitDays] = useState([]);
+  const [componentLoaded, setComponentLoaded] = useState(false);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
@@ -61,9 +62,7 @@ export default function Habits() {
 
   function checkCreateHabitContainer() {
     return toggleCreateHabit ? (
-      <div
-        value={{ habitName, habitDays, setHabitName, setHabitDays }}
-      >
+      <div value={{ habitName, habitDays, setHabitName, setHabitDays }}>
         <div
           toggleCreateHabit={(value) => {
             toggleCreateHabit(value);
@@ -71,6 +70,8 @@ export default function Habits() {
           saveHabit={(habitData) => {
             saveHabit(habitData);
           }}
+          componentLoaded={componentLoaded}
+          setComponentLoaded={setComponentLoaded}
         />
       </div>
     ) : (
@@ -79,6 +80,7 @@ export default function Habits() {
   }
 
   function saveHabit(habitData) {
+    setComponentLoaded(false);
     const createHabitContent =
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
     const promise = axios.post(createHabitContent, habitData, config);
@@ -87,9 +89,11 @@ export default function Habits() {
         const { data } = response;
         console.log(data);
         habitData.id = data.id;
+        toggleCreateHabit(false);
       })
       .catch((error) => {
         console.log(error);
+        setComponentLoaded(false);
       });
     setHabits([...habits, habitData]);
   }

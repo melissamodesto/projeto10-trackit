@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import TodayHabits from "./TodayHabits/TodayHabit";
 
-export default function TodayPage() {
+export default function TodayScreen() {
     const [todayHabits, setTodayHabits] = useState(null);
 
     useEffect(() => {
