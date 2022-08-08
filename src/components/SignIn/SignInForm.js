@@ -1,10 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
-import "./styleLoginScreen.css";
+import { useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
+import UserContext from "../Context/UserContext";
+import * as style from "../../style/styles";
 
-export default function LoginScreen({ pageLoaded, setPageLoaded }) {
+export default function SignInForm({ pageLoaded, setPageLoaded }) {
+  const { setUserLoggedIn } = useContext(UserContext);
   const [userLoginData, setUserLoginData] = useState({
     email: "",
     password: "",
@@ -30,6 +32,7 @@ export default function LoginScreen({ pageLoaded, setPageLoaded }) {
 
   function handleSubmit(event) {
     event.preventDefault();
+    setPageLoaded(false);
 
     let promise = axios.post(signInPostForm, userLoginData);
     promise
@@ -46,6 +49,7 @@ export default function LoginScreen({ pageLoaded, setPageLoaded }) {
           isLoggedIn: true,
         };
         localStorage.setItem("userData", JSON.stringify(newUserData));
+        setUserLoggedIn(true);
         navigate("../hoje");
       })
       .catch((error) => {
@@ -55,48 +59,47 @@ export default function LoginScreen({ pageLoaded, setPageLoaded }) {
   }
 
   return (
-    <div className="login-screen">
-      <img className="logo" src="./logo-trackit.png" alt="logo trackit" />
-      <div className="input-login">
-        <form
-          onSubmit={(event) => {
-            handleSubmit(event);
-          }}
-        >
-          <input
-            type="text"
-            value={email}
-            onChange={(event) =>
-              setUserLoginData({
-                ...userLoginData,
-                email: event.target.value,
-              })
-            }
-            placeholder="email"
-            autoComplete="on"
-            required
-            disabled={disableWhileLoading()}
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(event) =>
-              setUserLoginData({
-                ...userLoginData,
-                password: event.target.value,
-              })
-            }
-            placeholder="senha"
-            autoComplete="on"
-            required
-            disabled={disableWhileLoading()}
-          />
-          <button className="button-login">{fillButton()}</button>
-        </form>
-        <div className="signup">
-          <Link to="/cadastro">Não tem uma conta? Cadastre-se</Link>
-        </div>
-      </div>
-    </div>
+    <style.Form>
+      <img src="./logo-trackit.png" alt="logo trackit" />
+
+      <form
+        onSubmit={(event) => {
+          handleSubmit(event);
+        }}
+      >
+        <style.Input
+          type="text"
+          value={email}
+          onChange={(event) =>
+            setUserLoginData({
+              ...userLoginData,
+              email: event.target.value,
+            })
+          }
+          placeholder="email"
+          autoComplete="on"
+          required
+          disabled={disableWhileLoading()}
+        />
+        <style.Input
+          type="password"
+          value={password}
+          onChange={(event) =>
+            setUserLoginData({
+              ...userLoginData,
+              password: event.target.value,
+            })
+          }
+          placeholder="senha"
+          autoComplete="on"
+          required
+          disabled={disableWhileLoading()}
+        />
+        <style.DefaultButton>{fillButton()}</style.DefaultButton>
+      </form>
+      <style.StyledLink to="/cadastro">
+        Não tem uma conta? Cadastre-se
+      </style.StyledLink>
+    </style.Form>
   );
 }

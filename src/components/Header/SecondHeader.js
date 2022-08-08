@@ -1,11 +1,13 @@
+import React from "react";
+import * as style from "../../style/styles";
 
-export default function NoHabit({ toggleCreateHabit }) {
+export default function SecondHeader({ toggleCreateHabitContainer }) {
   return (
     <>
-      <div className="my-habits">
+      <style.SecondHeader>
         <h2>Meus Hábitos</h2>
-        <div onClick={() => toggleCreateHabit(true)} className="button-add-habits">+</div>
-      </div>
+        <button onClick={() => toggleCreateHabitContainer(true)}>+</button>
+      </style.SecondHeader>
     </>
   );
 }

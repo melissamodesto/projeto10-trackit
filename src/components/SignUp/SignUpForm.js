@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import React from "react";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
+import * as style from "../../style/styles";
 
 export default function SignUpForm(props) {
   const {
@@ -31,15 +31,11 @@ export default function SignUpForm(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-
     setPageLoaded(false);
 
     let promise = axios.post(signUpPostForm, userData);
     promise
       .then((response) => {
-        const { data } = response;
-        console.log(response);
-        console.log(data);
         navigate("../");
       })
       .catch((error) => {
@@ -47,20 +43,19 @@ export default function SignUpForm(props) {
           "Não foi possivel cadastrar o usuário! Verifique se o email já está cadastrado ou algum campo está errado"
         );
         setPageLoaded(true);
-        console.log('oi');
       });
   }
 
   return (
-    <div className="login-screen">
-      <img className="logo" src="./logo-trackit.png" alt="logo trackit" />
-      <div className="input-login">
+    <style.Form>
+      <img src="./logo-trackit.png" alt="logo trackit" />
+      <div>
         <form
           onSubmit={(event) => {
             handleSubmit(event);
           }}
         >
-          <input
+          <style.Input
             value={email}
             onChange={(event) =>
               setUserData({ ...userData, email: event.target.value })
@@ -71,7 +66,7 @@ export default function SignUpForm(props) {
             disabled={disableWhileLoading()}
             required
           />
-          <input
+          <style.Input
             value={password}
             onChange={(event) =>
               setUserData({
@@ -85,7 +80,7 @@ export default function SignUpForm(props) {
             disabled={disableWhileLoading()}
             required
           />
-          <input
+          <style.Input
             value={name}
             onChange={(event) =>
               setUserData({ ...userData, name: event.target.value })
@@ -96,7 +91,7 @@ export default function SignUpForm(props) {
             disabled={disableWhileLoading()}
             required
           />
-          <input
+          <style.Input
             value={image}
             onChange={(event) =>
               setUserData({ ...userData, image: event.target.value })
@@ -107,12 +102,12 @@ export default function SignUpForm(props) {
             autoComplete="on"
             disabled={disableWhileLoading()}
           />
-          <button className="button-login">{fillButton()}</button>
+          <style.DefaultButton>{fillButton()}</style.DefaultButton>
         </form>
-        <div className="signup">
-          <Link to="../">Já tem uma conta? Faça login!</Link>
-        </div>
+        <style.StyledLink to="../">
+          Já tem uma conta? Faça login!
+        </style.StyledLink>
       </div>
-    </div>
+    </style.Form>
   );
 }

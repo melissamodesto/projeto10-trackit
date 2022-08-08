@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Habit from "./Habit.js";
 import axios from "axios";
-import CreateHabits from "./CreateHabits";
 import SecondHeader from "../../Header/SecondHeader.js";
-import Context from "../../Context/Context";
+import CreateHabit from "./CreateHabits";
+import NoHabitMessage from "../../Messages/NoHabitMessage.js";
+import UserContext from "../../Context/UserContext";
+import CreateHabitContext from "../../Context/CreateHabitContext";
+import * as style from "../../../style/styles";
 
 export default function Habits() {
+  const { setUserLoggedIn } = useContext(UserContext);
   const [habits, setHabits] = useState([]);
   const [toggleCreateHabit, setToggleCreateHabit] = useState(false);
   const [habitName, setHabitName] = useState("");
@@ -20,7 +24,6 @@ export default function Habits() {
       Authorization: "Bearer " + token,
     },
   };
-  console.log(token);
 
   function toggleCreateHabitContainer(value) {
     setToggleCreateHabit(value);
@@ -33,21 +36,22 @@ export default function Habits() {
     const promise = axios.get(habitsGet, config);
     promise
       .then((response) => {
+        setUserLoggedIn(true); // user is logged in
         const { data } = response;
-        console.log(data);
         setHabits(data);
       })
       .catch((error) => {
-        alert(error);
+        setUserLoggedIn(false); // if user is not logged in, set userLoggedIn to false
         navigate("../");
       });
   }, []);
 
   function checkHabitsList() {
     if (habits.length > 0) {
-      return habits.map((habit) => {
+      return habits.map((habit, index) => {
         return (
           <Habit
+            key={index}
             habit={habit}
             removeHabit={(habitId) => {
               removeHabit(habitId);
@@ -56,16 +60,18 @@ export default function Habits() {
         );
       });
     } else {
-      return <SecondHeader />;
+      return <NoHabitMessage />;
     }
   }
 
   function checkCreateHabitContainer() {
     return toggleCreateHabit ? (
-      <div value={{ habitName, habitDays, setHabitName, setHabitDays }}>
-        <div
-          toggleCreateHabit={(value) => {
-            toggleCreateHabit(value);
+      <CreateHabitContext.Provider
+        value={{ habitName, habitDays, setHabitName, setHabitDays }}
+      >
+        <CreateHabit
+          toggleCreateHabitContainer={(value) => {
+            toggleCreateHabitContainer(value);
           }}
           saveHabit={(habitData) => {
             saveHabit(habitData);
@@ -73,7 +79,7 @@ export default function Habits() {
           componentLoaded={componentLoaded}
           setComponentLoaded={setComponentLoaded}
         />
-      </div>
+      </CreateHabitContext.Provider>
     ) : (
       <></>
     );
@@ -81,27 +87,27 @@ export default function Habits() {
 
   function saveHabit(habitData) {
     setComponentLoaded(false);
+
     const createHabitContent =
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
     const promise = axios.post(createHabitContent, habitData, config);
     promise
       .then((response) => {
         const { data } = response;
-        console.log(data);
         habitData.id = data.id;
-        toggleCreateHabit(false);
+        toggleCreateHabitContainer(false);
+        setHabits([...habits, habitData]);
       })
       .catch((error) => {
-        console.log(error);
-        setComponentLoaded(false);
+        alert("Algo deu errado, tente novamente");
+        setComponentLoaded(true);
       });
-    setHabits([...habits, habitData]);
   }
 
   function removeHabit(habitId) {
     const deleteHabit = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitId}`;
     axios.delete(deleteHabit, config);
-    console.log("Oiiiiiii");
+
     const newHabits = habits.filter((habit, index) => {
       if (habit.id === habitId) {
         return false;
@@ -117,17 +123,17 @@ export default function Habits() {
 
   return (
     <>
-      <div>
+      <style.Container>
         <SecondHeader
           toggleCreateHabitContainer={(value) => {
             toggleCreateHabitContainer(value);
           }}
         />
-        <div>
+        <style.Habits>
           {createHabitContent}
           {habitsContent}
-        </div>
-      </div>
+        </style.Habits>
+      </style.Container>
     </>
   );
 }

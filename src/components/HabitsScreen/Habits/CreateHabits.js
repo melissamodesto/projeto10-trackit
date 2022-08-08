@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
-import Context from "../../Context/Context";
+import React, { useEffect, useContext } from "react";
+import CreateHabitContext from "../../Context/CreateHabitContext";
 import { ThreeDots } from "react-loader-spinner";
+import * as style from "../../../style/styles";
 
 export default function CreateHabit({
   saveHabit,
-  toggleCreateHabit,
+  toggleCreateHabitContainer,
   componentLoaded,
   setComponentLoaded,
 }) {
   const daysOfWeek = ["D", "S", "T", "Q", "Q", "S", "S"];
-
-  const [habitName, setHabitName] = useContext(Context);
-  const [habitDays, setHabitDays] = useContext(Context);
+  const { habitName, setHabitName } = useContext(CreateHabitContext);
+  const { habitDays, setHabitDays } = useContext(CreateHabitContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -22,7 +22,7 @@ export default function CreateHabit({
   const buttonsDaysOfWeek = daysOfWeek.map((day, index) => {
     if (!habitDays.includes(index)) {
       return (
-        <div
+        <style.DayButton
           onClick={() => {
             if (!habitDays.includes(index)) {
               habitDays.push(index);
@@ -35,11 +35,11 @@ export default function CreateHabit({
           }}
         >
           {day}
-        </div>
+        </style.DayButton>
       );
     }
     return (
-      <div
+      <style.DayButton
         onClick={() => {
           if (!habitDays.includes(index)) {
             habitDays.push(index);
@@ -52,7 +52,7 @@ export default function CreateHabit({
         }}
       >
         {day}
-      </div>
+      </style.DayButton>
     );
   });
 
@@ -72,12 +72,11 @@ export default function CreateHabit({
     saveHabit({ name: habitName, days: habitDays });
     setHabitName("");
     setHabitDays([]);
-    toggleCreateHabit(false);
   }
 
   return (
-    <div>
-      <div
+    <style.CreateHabit>
+      <style.Input
         value={habitName}
         onChange={(event) => setHabitName(event.target.value)}
         type="text"
@@ -86,19 +85,22 @@ export default function CreateHabit({
         disabled={disableWhileLoading()}
       />
       <div>{buttonsDaysOfWeek}</div>
-      <div>
-        <div
+      <style.AddHabitButtons>
+        <style.CancelButton
           onClick={() => {
-            toggleCreateHabit(false);
+            toggleCreateHabitContainer(false);
             setComponentLoaded(false);
           }}
         >
           Cancelar
-        </div>
-        <div onClick={handleSaveHabit} disabled={disableWhileLoading()}> 
+        </style.CancelButton>
+        <style.DefaultButton
+          onClick={handleSaveHabit}
+          disabled={disableWhileLoading()}
+        >
           {fillButton()}
-        </div>
-      </div>
-    </div>
+        </style.DefaultButton>
+      </style.AddHabitButtons>
+    </style.CreateHabit>
   );
 }

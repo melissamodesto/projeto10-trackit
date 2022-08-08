@@ -1,28 +1,30 @@
 import React from "react";
-import axios from "axios";
+import * as style from "../../../style/styles";
 
 export default function Habit({ habit: { id, name, days }, removeHabit }) {
   const daysOfWeek = ["D", "S", "T", "Q", "Q", "S", "S"];
 
   const buttonsDaysOfWeek = daysOfWeek.map((day, index) => {
     return days.includes(index) ? (
-      <button key={index} className="day-button-selected">
-        {day}
-      </button>
+      <style.DayButtonOn key={index}>{day}</style.DayButtonOn>
     ) : (
-      <button key={index} className="day-button">
-        {day}
-      </button>
+      <style.DayButtonOn key={index}>{day}</style.DayButtonOn>
     );
   });
 
   return (
-    <>
+    <style.Habit>
       <p>{name}</p>
       <div>{buttonsDaysOfWeek}</div>
-      <div onClick={() => removeHabit(id)}>
-        <img src="../../assets/images/trash.png" alt="Remove Habit" />
-      </div>
-    </>
+      <style.RemoveHabit
+        onClick={() => {
+          if (window.confirm("Realmente deseja apagar o hábito?")) {
+            removeHabit(id);
+          }
+        }}
+      >
+        <ion-icon name="trash-outline"></ion-icon>
+      </style.RemoveHabit>
+    </style.Habit>
   );
 }

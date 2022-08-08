@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SignUpForm from "../SignUp/SignUpForm";
+import GlobalStyle from '../../style/GlobalStyle';
+import * as style from "../../style/styles";
 
 export default function SignUp() {
   const [userData, setUserData] = useState({
@@ -24,12 +26,15 @@ export default function SignUp() {
 
   return (
     <>
+      <GlobalStyle />
+      <style.LoginContainer>
       <SignUpForm
         setUserData={setUserData}
         userData={userData}
         pageLoaded={pageLoaded}
         setPageLoaded={setPageLoaded}
       />
+      </style.LoginContainer>
     </>
   );
 }

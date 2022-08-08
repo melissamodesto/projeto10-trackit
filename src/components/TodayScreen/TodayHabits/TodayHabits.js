@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import axios from "axios";
 import TopMessageToday from "./TopMessageToday";
 import TodayHabit from "./TodayHabit";
+import { useNavigate } from "react-router-dom";
+import UserContext from "../../Context/UserContext";
+import TodayHabitsContext from "../../Context/TodayHabitsContext";
+import * as style from "../../../style/styles";
 
 export default function TodayHabits() {
-  const [todayHabits, setTodayHabits] = useState([]);
+  const { todayHabits, setTodayHabits } = useContext(TodayHabitsContext);
+  const { setUserLoggedIn } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
   const config = {
@@ -13,42 +20,52 @@ export default function TodayHabits() {
   };
 
   useEffect(() => {
-    const getTodayHabits =
-      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
-
-    console.log(token);
-
-    const promise = axios.get(getTodayHabits, config);
-    promise
-      .then((response) => {
-        const { data } = response;
-        console.log(data);
-        setTodayHabits(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (!(localStorage.getItem("userData") && localStorage.getItem("token"))) {
+      setUserLoggedIn(false);
+      navigate("../");
+    } else {
+      setUserLoggedIn(true);
+    }
   }, []);
 
   function markAsDone(id) {
-    const markCheked = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`;
-    const markUncheck = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`;
+    const markChecked = `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`;
+    const markUnchecked = `https://mock-api.bootcamp.responderespondeai.com.br/api/v2/trackit/habits/${id}/uncheck`;
 
     const newHabits = todayHabits.map((todayHabit) => {
       if (todayHabit.id === id) {
         if (todayHabit.done === false) {
-          const promise = axios.post(markCheked, "", config);
+          todayHabit.currentSequence === todayHabit.highestSequence
+            ? (todayHabit.highestSequence += 1)
+            : (todayHabit.highestSequence += 0);
+          todayHabit.currentSequence += 1;
+
+          const promise = axios.post(markChecked, "", config);
           promise
             .then((response) => {})
             .catch((error) => {
               console.log(error);
+              todayHabit.currentSequence === todayHabit.highestSequence
+                ? (todayHabit.highestSequence -= 1)
+                : (todayHabit.highestSequence -= 0);
+              todayHabit.currentSequence -= 1;
             });
         } else if (todayHabit.done === true) {
-          const promise = axios.post(markUncheck, "", config);
+          todayHabit.currentSequence === todayHabit.highestSequence
+            ? (todayHabit.highestSequence -= 1)
+            : (todayHabit.highestSequence -= 0);
+          todayHabit.currentSequence -= 1;
+
+          const promise = axios.post(markUnchecked, "", config);
           promise
             .then((response) => {})
             .catch((error) => {
               console.log(error);
+
+              todayHabit.currentSequence === todayHabit.highestSequence
+                ? (todayHabit.highestSequence += 1)
+                : (todayHabit.highestSequence += 0);
+              todayHabit.currentSequence += 1;
             });
         }
         return {
@@ -81,11 +98,9 @@ export default function TodayHabits() {
   const todayHabitsContent = checkTodayHabitsList();
 
   return (
-    <div>
+    <style.Container>
       <TopMessageToday todayHabits={todayHabits} />
-      <div>
-        <div>{todayHabitsContent}</div>
-      </div>
-    </div>
+      <style.TodayHabits>{todayHabitsContent}</style.TodayHabits>
+    </style.Container>
   );
 }

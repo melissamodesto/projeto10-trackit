@@ -1,8 +1,16 @@
 import React from "react";
+import * as style from "../../../style/styles";
+import TopMessageToday from "./TopMessageToday";
 
 export default function TodayHabit({
-  todayHabit: { id, name, done, currentSequence, highestSequence },
+  todayHabit,
+  id,
+  name,
+  done,
+  currentSequence,
+  highestSequence,
   setHabitAsDone,
+  markAsDone,
 }) {
   const highestSequenceEl =
     currentSequence === highestSequence ? (
@@ -12,28 +20,32 @@ export default function TodayHabit({
     );
 
   return done ? (
-    <div>
-      <div>
-        <h3>{name}</h3>
-        <p>Sequência atual: {currentSequence} dias</p>
-        <p>
-          Seu recorde: {highestSequenceEl} dias
-        </p>
-      </div>
-      <button onClick={() => setHabitAsDone(id)}>
-        <ion-icon name="checkmark-outline"></ion-icon>
-      </button>
-    </div>
+    <style.Container>
+      <style.TodayHabitDone>
+        <div>
+          <h3>{name}</h3>
+          <p>
+            Sequência atual: <span>{currentSequence} dias</span>
+          </p>
+          <p>Seu recorde: {highestSequenceEl}</p>
+        </div>
+        <button onClick={() => setHabitAsDone(id)}>
+          <ion-icon name="checkmark-outline"></ion-icon>
+        </button>
+      </style.TodayHabitDone>
+    </style.Container>
   ) : (
-    <div>
-      <div>
-        <h3>{name}</h3>
-        <p>Sequência atual: {currentSequence} dias</p>
-        <p>Seu recorde: {highestSequenceEl} dias</p>
-      </div>
-      <button onClick={() => setHabitAsDone(id)}>
-        <ion-icon name="checkmark-outline"></ion-icon>
-      </button>
-    </div>
+    <style.Container>
+      <style.TodayHabit>
+        <div>
+          <h3>{name}</h3>
+          <p>Sequência atual: {currentSequence} dias</p>
+          <p>Seu recorde: {highestSequenceEl} </p>
+        </div>
+        <button onClick={() => setHabitAsDone(id)}>
+          <ion-icon name="checkmark-outline"></ion-icon>
+        </button>
+      </style.TodayHabit>
+    </style.Container>
   );
 }
